@@ -15,8 +15,8 @@ SUBMISSION_DIR = os.path.join(BASE_DIR, 'submissions')
 
 # ===== Training mode configuration =====
 # Set to True to use train_sample for quick testing, set to False to use the full train dataset
-USE_SAMPLE_DATA = True
-#USE_SAMPLE_DATA = False
+USE_SAMPLE_DATA = False
+#USE_SAMPLE_DATA = True
 
 # Select training directory based on mode
 TRAIN_DATA_DIR = TRAIN_SAMPLE_DIR if USE_SAMPLE_DATA else TRAIN_DIR
@@ -34,9 +34,9 @@ AUGMENTATION_FACTOR = 2  # 数据增强倍数
 
 # ===== 模型参数 =====
 NUM_CLASSES = 20  # 食物类别数量
-BATCH_SIZE = 32
-EPOCHS = 50  # 训练轮数（sample模式下可减少）
-LEARNING_RATE = 0.001
+BATCH_SIZE = 32  # 批次大小
+EPOCHS = 200  # 增加训练轮数，让早停机制决定何时停止
+LEARNING_RATE = 0.001  # 恢复正常学习率
 VALIDATION_SPLIT = 0.2  # 验证集比例
 
 # ===== Food classification =====

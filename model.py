@@ -23,40 +23,26 @@ def build_cnn_model(input_shape, num_classes=NUM_CLASSES):
         # Input layer
         layers.Input(shape=input_shape),
         
-        # First convolutional block
+        # First convolutional block - 减少过拟合
         layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
-        layers.BatchNormalization(),
         layers.MaxPooling2D((2, 2)),
-        layers.Dropout(0.25),
+        layers.Dropout(0.3),
         
         # Second convolutional block
         layers.Conv2D(64, (3, 3), activation='relu', padding='same'),
-        layers.BatchNormalization(),
         layers.MaxPooling2D((2, 2)),
-        layers.Dropout(0.25),
+        layers.Dropout(0.3),
         
         # Third convolutional block
         layers.Conv2D(128, (3, 3), activation='relu', padding='same'),
-        layers.BatchNormalization(),
         layers.MaxPooling2D((2, 2)),
-        layers.Dropout(0.25),
-        
-        # Fourth convolutional block
-        layers.Conv2D(256, (3, 3), activation='relu', padding='same'),
-        layers.BatchNormalization(),
-        layers.MaxPooling2D((2, 2)),
-        layers.Dropout(0.25),
+        layers.Dropout(0.4),
         
         # global average pooling
         layers.GlobalAveragePooling2D(),
         
-        # Fully connected layers
-        layers.Dense(512, activation='relu'),
-        layers.BatchNormalization(),
-        layers.Dropout(0.5),
-        
-        layers.Dense(256, activation='relu'),
-        layers.BatchNormalization(),
+        # Simplified fully connected layers
+        layers.Dense(128, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
         layers.Dropout(0.5),
         
         # Output layer
@@ -168,7 +154,7 @@ def get_callbacks(model_name='audio_classifier'):
         # Early stopping - prevent overfitting
         keras.callbacks.EarlyStopping(
             monitor='val_loss',
-            patience=10,
+            patience=20,
             restore_best_weights=True,
             verbose=1
         ),
@@ -177,8 +163,8 @@ def get_callbacks(model_name='audio_classifier'):
         keras.callbacks.ReduceLROnPlateau(
             monitor='val_loss',
             factor=0.5,
-            patience=5,
-            min_lr=1e-7,
+            patience=8,
+            min_lr=1e-6,
             verbose=1
         ),
         

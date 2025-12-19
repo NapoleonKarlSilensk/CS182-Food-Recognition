@@ -1,0 +1,10 @@
+Model type: cnn
+Training mode: Sample mode
+Number of training samples: 800
+Number of validation samples: 200
+Number of epochs: 200
+Batch size: 32
+Learning rate: 0.001
+Training time: 11.83 minutes
+Final validation accuracy: 33.50%
+Final validation loss: 2.1502

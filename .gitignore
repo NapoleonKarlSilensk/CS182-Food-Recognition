@@ -46,8 +46,15 @@ test_b/
 # 提交文件（可以选择性保留或忽略）
 # submissions/
 
+# 实验归档（保留索引和README，但忽略大文件）
+experiments/*/models/*.h5
+experiments/*/models/*.keras
+experiments/*/plots/*.npy
+# 保留: experiments/INDEX.md, experiments/*/README.md, experiments/*/plots/*.png
+
 # 临时文件
 *.tmp
+data_check.png
 *.bak
 .DS_Store
 Thumbs.db

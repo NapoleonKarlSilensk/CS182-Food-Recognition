@@ -1,0 +1,10 @@
+{
+  "validation_accuracy": 0.5786,
+  "validation_loss": 1.4183,
+  "training_accuracy": "N/A",
+  "training_time": "85.44 minutes",
+  "best_epoch": 199,
+  "total_params": 111764,
+  "trainable_params": 111764,
+  "note": "Current baseline - 从头训练的3层CNN"
+}

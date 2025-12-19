@@ -1,0 +1,60 @@
+{
+  "experiment_id": "EXP003",
+  "experiment_name": "baseline_cnn_full",
+  "timestamp": "20251220_032418",
+  "date": "2025-12-20 03:24:18",
+  "note": "Simplified 3-layer CNN, full train dataset - Current baseline",
+  "config": {
+    "model_type": "CNN",
+    "architecture": "3-layer Simplified CNN",
+    "conv_layers": 3,
+    "filters": [
+      32,
+      64,
+      128
+    ],
+    "dense_units": 128,
+    "dropout_rates": [
+      0.3,
+      0.4,
+      0.5,
+      0.5
+    ],
+    "l2_regularization": 0.01,
+    "dataset": "train (full)",
+    "train_samples": 5600,
+    "val_samples": 1400,
+    "total_samples": 7000,
+    "num_classes": 20,
+    "epochs": 200,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "callbacks": [
+      "EarlyStopping(patience=20)",
+      "ReduceLROnPlateau(patience=8)",
+      "ModelCheckpoint"
+    ],
+    "early_stopping_epoch": 199
+  },
+  "metrics": {
+    "validation_accuracy": 0.5786,
+    "validation_loss": 1.4183,
+    "training_accuracy": "N/A",
+    "training_time": "85.44 minutes",
+    "best_epoch": 199,
+    "total_params": 111764,
+    "trainable_params": 111764,
+    "note": "Current baseline - 从头训练的3层CNN"
+  },
+  "final_metrics": {
+    "validation_accuracy": 0.5786,
+    "validation_loss": 1.4183,
+    "training_accuracy": "N/A",
+    "training_time": "85.44 minutes",
+    "best_epoch": 199,
+    "total_params": 111764,
+    "trainable_params": 111764,
+    "note": "Current baseline - 从头训练的3层CNN"
+  }
+}

@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# 模型文件（太大，不适合push到GitHub）
+models/*.h5
+models/*.keras
+models/*.pb
+
+# 日志文件
+logs/
+*.log
+
+# TensorBoard
+events.out.tfevents.*
+
+# 训练数据（数据集通常很大，不push到GitHub）
+train/
+train_sample/
+test_a/
+test_b/
+
+# 提交文件（可以选择性保留或忽略）
+# submissions/
+
+# 临时文件
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# 其他
+*.csv
+!requirements.txt

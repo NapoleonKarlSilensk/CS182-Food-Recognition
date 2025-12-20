@@ -212,6 +212,64 @@
 |--------|------|------|---------|------|
 | EXP-001 | 2025-12-20 | Baseline CNN (4层) | 7% | 严重过拟合 |
 | EXP-002 | 2025-12-20 | Simplified CNN (3层) | 36% | train_sample |
-| EXP-003 | 2025-12-20 | Simplified CNN (3层) | **57.86%** | 完整数据集 |
-| EXP-004 | TBD | 待定 | TBD | 下一个实验 |
+| EXP-003 | 2025-12-20 | Simplified CNN (3层) | **57.86%** | 完整数据集，当前baseline |
+| EXP-007 | 2025-12-20 | YAMNet迁移学习 | 40.50% | ❌ 失败：sample数据 |
+| EXP-008 | 2025-12-20 | YAMNet迁移学习 | 54.93% | ❌ 失败：比baseline差2.93% |
 
+---
+
+## 已尝试方法 - 失败案例
+
+### ❌ YAMNet迁移学习（EXP-007, EXP-008）
+
+**方法描述**:
+- 使用Google预训练的YAMNet模型（在AudioSet上训练）
+- 冻结YAMNet参数，仅训练分类头
+- 输入：16kHz原始波形（5秒）
+- 特征提取：1024维embedding
+
+**技术细节**:
+```python
+# YAMNet配置
+- Sample rate: 16000 Hz (vs baseline 22050 Hz)
+- Input: Raw waveform (80000 samples)
+- Feature: YAMNet embeddings (1024-d)
+- Classifier: Dense(128) + Dropout(0.4) + Dense(20)
+- Frozen YAMNet: 3.5M parameters
+- Trainable: 133K parameters
+```
+
+**训练结果**:
+- Sample数据（1000样本）：40.50% - 比baseline低17.36%
+- 完整数据（7000样本）：54.93% - 比baseline低2.93%
+- 训练时间：6-30分钟（比baseline快）
+
+**失败原因分析**:
+1. **领域不匹配** 🎯
+   - YAMNet在AudioSet（音乐、语音、环境音）上训练
+   - 食物咀嚼声是非常特定的生物声学信号
+   - 预训练特征对此任务不够discriminative
+
+2. **特征提取方式问题** ⚙️
+   - 使用tf.map_fn逐样本处理batch，效率低
+   - 全局平均池化可能丢失时序信息
+   - 固定的1024维embedding可能不适合20类分类
+
+3. **架构限制** 🏗️
+   - 分类头过于简单（仅2层）
+   - YAMNet冻结导致无法学习任务特定特征
+   - 尝试fine-tune会导致训练时间大幅增加
+
+**关键教训**:
+> **预训练模型并非银弹**。当预训练数据与目标任务领域差异过大时，简单的针对性CNN可能比大型预训练模型更有效。
+
+**结论**: ❌ 放弃YAMNet方向，回归baseline优化
+
+---
+
+## 下一步计划
+
+基于EXP-003 baseline（57.86%），优先尝试：
+1. **数据增强**（SpecAugment等）- 最有希望
+2. **架构优化**（更深的CNN + 残差连接）
+3. **多特征融合**（Mel + MFCC + Chroma）

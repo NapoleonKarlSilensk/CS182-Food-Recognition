@@ -58,7 +58,7 @@ class ADL:
             print(f"Feature extraction failed: {str(e)}")
             return None
     
-    def load_training_data(self):
+    def load_data(self):
         """Load training data"""
         X = []
         y = []
@@ -109,7 +109,7 @@ class ADL:
         
         return X, y
     
-    def load_test_data(self, test_dir):
+    def load_test(self, test_dir):
         """Load test data"""
         X = []
         file_names = []
@@ -150,7 +150,7 @@ class ADL:
         return X, file_names
 
 
-def apply_data_augmentation(audio):
+def augment(audio):
     """
     Data augmentation: Apply random transformations to audio
     """

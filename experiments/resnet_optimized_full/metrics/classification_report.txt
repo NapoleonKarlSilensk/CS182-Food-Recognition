@@ -1,0 +1,26 @@
+                precision    recall  f1-score   support
+
+          aloe       0.94      1.00      0.97        51
+        burger       0.93      0.98      0.96        56
+       cabbage       1.00      1.00      1.00        49
+candied_fruits       0.96      0.99      0.97        75
+       carrots       0.98      0.98      0.98        62
+         chips       0.97      0.97      0.97        67
+     chocolate       0.96      0.89      0.92        27
+        drinks       1.00      1.00      1.00        28
+         fries       0.98      0.98      0.98        61
+        grapes       1.00      1.00      1.00        52
+       gummies       0.97      1.00      0.99        67
+     ice-cream       0.98      0.91      0.95        69
+         jelly       0.93      0.98      0.95        43
+       noodles       0.92      0.95      0.93        37
+       pickles       0.99      1.00      0.99        81
+         pizza       1.00      0.98      0.99        60
+          ribs       0.95      0.91      0.93        46
+        salmon       0.98      0.96      0.97        46
+          soup       1.00      1.00      1.00        28
+         wings       0.98      0.91      0.94        45
+
+      accuracy                           0.97      1050
+     macro avg       0.97      0.97      0.97      1050
+  weighted avg       0.97      0.97      0.97      1050

@@ -1,0 +1,10 @@
+{
+  "val_accuracy": 0.9523809552192688,
+  "val_loss": 0.21786269545555115,
+  "training_time_minutes": 503.11574994999995,
+  "total_epochs": 75,
+  "best_epoch": 60,
+  "best_val_accuracy": 0.9523809552192688,
+  "comparison_note": "EfficientNet-B0 with same config as ResNet for fair comparison",
+  "use_pretrain": false
+}

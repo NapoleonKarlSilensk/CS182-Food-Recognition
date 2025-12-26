@@ -1,0 +1,8 @@
+{
+  "val_accuracy": 0.9723809361457825,
+  "val_loss": 0.14654697477817535,
+  "training_time_minutes": 47.213548233333334,
+  "total_epochs": 62,
+  "best_epoch": 47,
+  "best_val_accuracy": 0.9723809361457825
+}

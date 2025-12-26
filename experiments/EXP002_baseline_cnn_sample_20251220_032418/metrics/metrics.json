@@ -1,7 +1,0 @@
-{
-  "validation_accuracy": 0.36,
-  "validation_loss": 2.1951,
-  "training_time": "约20分钟",
-  "best_epoch": 176,
-  "total_params": 111764
-}

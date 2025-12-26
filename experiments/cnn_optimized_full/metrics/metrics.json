@@ -1,0 +1,9 @@
+{
+  "val_accuracy": 0.8971428275108337,
+  "val_loss": 0.3863368034362793,
+  "training_time_minutes": 324.14402133333334,
+  "total_epochs": 68,
+  "best_epoch": 53,
+  "best_val_accuracy": 0.8971428275108337,
+  "comparison_note": "Optimized CNN with same config as ResNet for fair comparison"
+}

@@ -8,7 +8,7 @@ from tensorflow.keras import layers, models
 from config import *
 
 
-def build_cnn_model(input_shape, num_classes=NUM_CLASSES):
+def build_cnn(input_shape, num_classes=NUM_CLASSES):
     """
     Build a CNN model
     
@@ -23,7 +23,7 @@ def build_cnn_model(input_shape, num_classes=NUM_CLASSES):
         # Input layer
         layers.Input(shape=input_shape),
         
-        # First convolutional block - 减少过拟合
+        # First convolutional block - reduce overfitting
         layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
         layers.MaxPooling2D((2, 2)),
         layers.Dropout(0.3),
@@ -52,16 +52,53 @@ def build_cnn_model(input_shape, num_classes=NUM_CLASSES):
     return model
 
 
-def build_resnet_like_model(input_shape, num_classes=NUM_CLASSES):
+def residual_block(x, filters, strides=1, use_projection=False):
     """
-    Build a ResNet-like deep model
+    Build a residual block
     
     Args:
-        input_shape: Shape of the input features
+        x: Input tensor
+        filters: Number of filters
+        strides: Stride size
+        use_projection: Whether to use projection shortcut
+    
+    Returns:
+        Output tensor
+    """
+    shortcut = x
+    
+    # Main path
+    x = layers.Conv2D(filters, (3, 3), strides=strides, padding='same')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Activation('relu')(x)
+    x = layers.Dropout(0.2)(x)
+    
+    x = layers.Conv2D(filters, (3, 3), padding='same')(x)
+    x = layers.BatchNormalization()(x)
+    
+    # Shortcut path with projection if needed
+    if use_projection or strides != 1:
+        shortcut = layers.Conv2D(filters, (1, 1), strides=strides, padding='same')(shortcut)
+        shortcut = layers.BatchNormalization()(shortcut)
+    
+    # Add shortcut
+    x = layers.Add()([x, shortcut])
+    x = layers.Activation('relu')(x)
+    
+    return x
+
+
+def build_resnet(input_shape, num_classes=NUM_CLASSES):
+    """
+    Build an improved ResNet-like model for audio classification
+    3 stages, stride convolution replaces some pooling
+    
+    Args:
+        input_shape: Shape of the input features (height, width, channels)
         num_classes: Number of classes for classification
     
     Returns:
-        Compiled Keras model
+        Keras model
     """
     inputs = layers.Input(shape=input_shape)
     
@@ -71,47 +108,31 @@ def build_resnet_like_model(input_shape, num_classes=NUM_CLASSES):
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D((3, 3), strides=2, padding='same')(x)
     
-    # Residual block 1
-    shortcut = x
-    x = layers.Conv2D(64, (3, 3), padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = layers.Conv2D(64, (3, 3), padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Add()([x, shortcut])
-    x = layers.Activation('relu')(x)
+    # Stage 1: 64 filters, 2 blocks
+    x = residual_block(x, 64, strides=1, use_projection=True)
+    x = residual_block(x, 64, strides=1)
     
-    # Residual block 2
-    shortcut = layers.Conv2D(128, (1, 1), strides=2)(x)
-    x = layers.Conv2D(128, (3, 3), strides=2, padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = layers.Conv2D(128, (3, 3), padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Add()([x, shortcut])
-    x = layers.Activation('relu')(x)
+    # Stage 2: 128 filters, 2 blocks (stride=2 downsampling)
+    x = residual_block(x, 128, strides=2, use_projection=True)
+    x = residual_block(x, 128, strides=1)
     
-    # Residual block 3
-    shortcut = layers.Conv2D(256, (1, 1), strides=2)(x)
-    x = layers.Conv2D(256, (3, 3), strides=2, padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = layers.Conv2D(256, (3, 3), padding='same')(x)
-    x = layers.BatchNormalization()(x)
-    x = layers.Add()([x, shortcut])
-    x = layers.Activation('relu')(x)
+    # Stage 3: 256 filters, 2 blocks (stride=2 downsampling)
+    x = residual_block(x, 256, strides=2, use_projection=True)
+    x = residual_block(x, 256, strides=1)
     
-    # Global average pooling and output
+    # Global average pooling
     x = layers.GlobalAveragePooling2D()(x)
-    x = layers.Dense(512, activation='relu')(x)
+    
+    # Classifier - increase Dense layer capacity
+    x = layers.Dense(512, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.01))(x)
     x = layers.Dropout(0.5)(x)
     outputs = layers.Dense(num_classes, activation='softmax')(x)
     
-    model = models.Model(inputs=inputs, outputs=outputs)
+    model = models.Model(inputs=inputs, outputs=outputs, name='ResNet_Audio')
     return model
 
 
-def compile_model(model, learning_rate=LEARNING_RATE):
+def compile(model, learning_rate=LEARNING_RATE):
     """
     Compile the model
     
@@ -131,7 +152,7 @@ def compile_model(model, learning_rate=LEARNING_RATE):
     return model
 
 
-def get_callbacks(model_name='audio_classifier'):
+def callbacks(model_name='audio_classifier'):
     """
     Get training callbacks
     

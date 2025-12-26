@@ -22,11 +22,12 @@ USE_SAMPLE_DATA = False
 TRAIN_DATA_DIR = TRAIN_SAMPLE_DIR if USE_SAMPLE_DATA else TRAIN_DIR
 
 # ===== 音频处理参数 =====
-SAMPLE_RATE = 22050  # 采样率
+SAMPLE_RATE = 16000  # 采样率 - 改为16kHz以减少计算量
 DURATION = 5  # 统一音频长度（秒）
 N_MELS = 128  # Mel频谱图的频带数量
 HOP_LENGTH = 512  # STFT的跳跃长度
 N_FFT = 2048  # FFT窗口大小
+# 输出形状: (128, 157) for 16kHz 5秒音频
 
 # ===== 数据增强参数 =====
 USE_DATA_AUGMENTATION = True  # 是否使用数据增强
@@ -35,9 +36,9 @@ AUGMENTATION_FACTOR = 2  # 数据增强倍数
 # ===== 模型参数 =====
 NUM_CLASSES = 20  # 食物类别数量
 BATCH_SIZE = 32  # 批次大小
-EPOCHS = 200  # 增加训练轮数，让早停机制决定何时停止
-LEARNING_RATE = 0.001  # 恢复正常学习率
-VALIDATION_SPLIT = 0.2  # 验证集比例
+EPOCHS = 100  # 训练轮次
+LEARNING_RATE = 0.001  # 学习率
+VALIDATION_SPLIT = 0.15  # 验证集比例
 
 # ===== Food classification =====
 CLASS_NAMES = [
